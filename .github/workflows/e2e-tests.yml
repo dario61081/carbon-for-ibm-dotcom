@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  
+
   install-web-components:
     strategy:
       matrix:
@@ -163,7 +163,7 @@ jobs:
 
   react-tests:
     runs-on: macos-latest
-    needs: install-web-components
+    needs: install-react
     strategy:
       fail-fast: false
       matrix:
