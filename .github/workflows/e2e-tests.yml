@@ -37,7 +37,7 @@ jobs:
             **/node_modules
             ~/.cache/Cypress
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ matrix.os }}-yarn-v2${{ hashFiles('**/yarn.lock') }}
+          key: ${{ matrix.os }}-yarn-v3${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ matrix.os }}-yarn
 
@@ -59,7 +59,7 @@ jobs:
           path: packages/react/storybook-static
 
   react-tests:
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     needs: install-react
     strategy:
       fail-fast: false
@@ -68,7 +68,7 @@ jobs:
         containers: [1, 2, 3, 4, 5]
         os: [ ubuntu-latest ]
         node-version: [ 14.x ]
-        browser: [ chromium, firefox ]
+        browser: [ chromium ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -91,7 +91,7 @@ jobs:
           path: |
             **/node_modules
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ matrix.os }}-yarn-v2${{ hashFiles('**/yarn.lock') }}
+          key: ${{ matrix.os }}-yarn-v3${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ matrix.os }}-yarn
         
