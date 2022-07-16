@@ -91,7 +91,7 @@ jobs:
           path: |
             **/node_modules
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ matrix.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ matrix.os }}-yarn-v2${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ matrix.os }}-yarn
         
