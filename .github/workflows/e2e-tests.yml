@@ -35,9 +35,9 @@ jobs:
         with:
           path: |
             **/node_modules
-            ~/.cache/Cypress
+            /home/runner/.cache/Cypress
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ matrix.os }}-yarn-v4${{ hashFiles('**/yarn.lock') }}
+          key: ${{ matrix.os }}-yarn-v5${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ matrix.os }}-yarn
 
@@ -90,9 +90,9 @@ jobs:
         with:
           path: |
             **/node_modules
-             /home/runner/.cache/Cypress
+            /home/runner/.cache/Cypress
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ matrix.os }}-yarn-v4${{ hashFiles('**/yarn.lock') }}
+          key: ${{ matrix.os }}-yarn-v5${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ matrix.os }}-yarn
         
