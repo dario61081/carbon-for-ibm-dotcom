@@ -108,6 +108,7 @@ jobs:
           working-directory: packages/web-components
           config-file: tests/e2e-storybook/cypress.json
           start: yarn test:e2e-storybook:test:parallel
+          ci-build-id: '${{ github.sha }}-${{ github.workflow }}-wc'
           install: false
           browser: chrome
           record: true
@@ -140,9 +141,9 @@ jobs:
           path: |
             **/node_modules
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ matrix.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-yarn
+            ${{ matrix.os }}-yarn
 
       - name: Installing dependencies (if not cached)
         if: steps.yarn-cache.outputs.cache-hit != 'true'
@@ -195,9 +196,9 @@ jobs:
             **/node_modules
             ~/.cache/Cypress
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ matrix.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-yarn
+            ${{ matrix.os }}-yarn
         
       - name: 'Run e2e tests (chromium)'
         if: matrix.browser == 'chromium'      
@@ -206,6 +207,7 @@ jobs:
           working-directory: packages/react
           config-file: tests/e2e-storybook/cypress.json
           start: yarn test:e2e-storybook:test:parallel
+          ci-build-id: '${{ github.sha }}-${{ github.workflow }}-react'
           install: false
           browser: chrome
           record: true
