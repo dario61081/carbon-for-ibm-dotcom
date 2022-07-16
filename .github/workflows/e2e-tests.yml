@@ -12,111 +12,6 @@ concurrency:
 
 jobs:
 
-  install-web-components:
-    strategy:
-      matrix:
-        os: [ macos-latest ]
-        node-version: [ 14.x ]
-        browser: [ chromium ]
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 120
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
-
-      - uses: actions/cache@v2
-        name: Download any existing cache
-        id: yarn-cache
-        with:
-          path: |
-            **/node_modules
-            /Users/runner/Library/Caches/Cypress
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn
-
-      - name: Installing dependencies (if not cached)
-        if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn install --offline
-
-      - name: Build project
-        run: yarn lerna run --stream --ignore @carbon/ibmdotcom-react build
-
-      - name: Set Cloud Masthead env var
-        uses: ./.github/actions/set-dotenv
-        with:
-          env-file: packages/web-components/.env
-        env:
-          DDS_CLOUD_MASTHEAD: true
-
-      - name: Build storybook
-        working-directory: packages/web-components
-        run: yarn build-storybook
-
-      - name: Save build folder
-        uses: actions/upload-artifact@v2
-        with:
-          name: storybook-build
-          path: packages/web-components/storybook-static
-
-  web-components-tests:
-    runs-on: macos-latest
-    needs: install-web-components
-    strategy:
-      fail-fast: false
-      matrix:
-        # run copies of the current job in parallel
-        containers: [1, 2, 3, 4, 5, 6, 7, 8, 9]
-        os: [ macos-latest ]
-        node-version: [ 14.x ]
-        browser: [ chromium ]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'yarn'        
-
-      - name: Download the build folders
-        uses: actions/download-artifact@v2
-        with:
-          name: storybook-build
-          path: packages/web-components/storybook-static
-
-      - uses: actions/cache@v2
-        name: Retrieve yarn cache
-        id: yarn-cache
-        with:
-          path: |
-            **/node_modules
-            /Users/runner/Library/Caches/Cypress
-            ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn
-        
-      - name: 'Run e2e tests (chromium)'
-        uses: cypress-io/github-action@v4
-        with:
-          working-directory: packages/web-components
-          config-file: tests/e2e-storybook/cypress.json
-          start: yarn test:e2e-storybook:test:parallel
-          ci-build-id: '${{ github.sha }}-${{ github.workflow }}-wc'
-          install: false
-          browser: chrome
-          record: true
-          parallel: true
-        env:
-          CYPRESS_RECORD_KEY: carbon-for-ibm-dotcom
-          CYPRESS_API_URL: "https://sorry-cypress-director.qfl95m0zv01.us-east.codeengine.appdomain.cloud"
-          CYPRESS_CACHE_FOLDER: /Users/runner/Library/Caches/Cypress
 
   install-react:
     strategy:
@@ -140,6 +35,7 @@ jobs:
         with:
           path: |
             **/node_modules
+            ~/.cache/Cypress
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ matrix.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
