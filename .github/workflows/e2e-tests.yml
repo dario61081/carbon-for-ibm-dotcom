@@ -37,7 +37,7 @@ jobs:
             **/node_modules
             ~/.cache/Cypress
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ matrix.os }}-yarn-v2${{ hashFiles('**/yarn.lock') }}
+          key: ${{ matrix.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
             ${{ matrix.os }}-yarn
 
@@ -90,7 +90,6 @@ jobs:
         with:
           path: |
             **/node_modules
-            ~/.cache/Cypress
             ${{ steps.yarn-cache-dir-path.outputs.dir }}
           key: ${{ matrix.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
@@ -111,4 +110,3 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: carbon-for-ibm-dotcom
           CYPRESS_API_URL: "https://sorry-cypress-director.qfl95m0zv01.us-east.codeengine.appdomain.cloud"
-          CYPRESS_CACHE_FOLDER: ~/.cache/Cypress
