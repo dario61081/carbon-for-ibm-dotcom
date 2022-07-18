@@ -46,7 +46,6 @@ jobs:
 
       - name: Build project
         run: yarn lerna run --stream --ignore @carbon/ibmdotcom-web-components --ignore @carbon/ibmdotcom-services-store build
-
       - name: Build storybook
         working-directory: packages/react
         run: yarn build-storybook
