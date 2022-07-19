@@ -73,5 +73,5 @@ jobs:
       - name: sadasds
         run: echo ${{ needs.react-tests.result }}
       - name: Check React test matrix status
-        if: "${{ needs.react-tests.result != 'success' }}"
+        if: "${{ needs.react-tests.result == 'success' }}"
         run: exit 1
