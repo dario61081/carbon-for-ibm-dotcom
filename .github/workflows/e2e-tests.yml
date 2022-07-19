@@ -58,11 +58,11 @@ jobs:
           echo everything here ${{ steps.cypress-tests-react.outputs }}
 
       - name: Bypass failure if test didn't run
-        if: ${{ always() && (steps.cypress-tests-react.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl) }}
+        if: ${{ (steps.cypress-tests-react.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl != '') }}
         run: exit 0
 
       - name: Fail job if a test failed
-        if: ${{ always() && (steps.cypress-tests-react.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl != '') }}
+        if: ${{ (steps.cypress-tests-react.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl != '') }}
         run: exit 1     
 
   react-tests-completed:
