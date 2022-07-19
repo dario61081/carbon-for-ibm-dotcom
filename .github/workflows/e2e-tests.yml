@@ -59,6 +59,7 @@ jobs:
   react-tests:
     runs-on: ubuntu-latest
     needs: install-react
+    continue-on-error: true
     strategy:
       fail-fast: false
       matrix:
@@ -98,7 +99,6 @@ jobs:
         if: matrix.browser == 'chromium'
         id: cypress-tests-react
         uses: cypress-io/github-action@v4
-        continue-on-error: true
         with:
           working-directory: packages/react
           config-file: tests/e2e-storybook/cypress.json
@@ -112,6 +112,13 @@ jobs:
           CYPRESS_RECORD_KEY: carbon-for-ibm-dotcom
           CYPRESS_API_URL: "https://sorry-cypress-director.qfl95m0zv01.us-east.codeengine.appdomain.cloud"
           CYPRESS_CACHE_FOLDER: /home/runner/.cache/Cypress
+
+      - name: Print Dashboard URL
+        run: |
+          echo Cypress finished with: ${{ steps.cypress-tests-react.outcome }}
+          echo See results at ${{ steps.cypress-tests-react.outputs.dashboardUrl }}  
+
+
       - name: Bypass failure if test didn't run
         if: ${{ (steps.cypress-tests-react.outputs.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl == '') }}
         run: exit 0
