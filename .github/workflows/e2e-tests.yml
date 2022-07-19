@@ -121,7 +121,6 @@ jobs:
           echo See results at ${{ steps.cypress-tests-react.outputs.dashboardUrl }}  
 
       - name: Bypass failure if test didn't run
-        id: 
         if: "${{ (steps.cypress-tests-react.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl == '') }}"
         run: exit 0
 
