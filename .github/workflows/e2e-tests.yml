@@ -19,7 +19,6 @@ jobs:
       fail-fast: false
       matrix:
         # run copies of the current job in parallel
-        containers: [1, 2, 3, 4, 5]
         os: [ ubuntu-latest ]
         node-version: [ 14.x ]
         browser: [ chromium ]
@@ -57,6 +56,23 @@ jobs:
           echo Cypress finished with: ${{ steps.cypress-tests-react.outcome }}
           echo See results at ${{ steps.cypress-tests-react.outputs.dashboardUrl }}
           echo everything here ${{ steps.cypress-tests-react.outputs }}
+
+      - name: check 1
+        if: ${{ always() }}
+        run: echo 'hi'
+
+      - name: check 2
+        if: ${{ (steps.cypress-tests-react.outputs.outcome == 'failure') }}
+        run: echo 'failure'
+
+      - name: check 3
+        if: steps.cypress-tests-react.outputs.dashboardUrl == ''
+        run: echo 'memes'
+
+      - name: ceck 4
+        if: steps.cypress-tests-react.outputs.dashboardUrl == 0
+        run: echo 'wow'
+
 
       - name: Bypass failure if test didn't run
         if: "${{ always() && (steps.cypress-tests-react.outputs.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl) }}"
