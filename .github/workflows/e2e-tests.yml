@@ -102,7 +102,7 @@ jobs:
         with:
           working-directory: packages/react
           config-file: tests/e2e-storybook/cypress.json
-          start: yarn test:e2e-storybook:test:parallel 2>&1 | tee test.log
+          start: yarn test:e2e-storybook:test:parallel
           ci-build-id: '${{ github.sha }}-${{ github.workflow }}-react'
           install: false
           browser: chrome
@@ -113,7 +113,7 @@ jobs:
           CYPRESS_API_URL: "https://sorry-cypress-director.qfl95m0zv01.us-east.codeengine.appdomain.cloud"
           CYPRESS_CACHE_FOLDER: /home/runner/.cache/Cypress
       - name: 'Ensure command ran'
-        run: echo ::set-output name=cypress-error::$(grep "Could not find Cypress test run results" test.log | wc -l)
+        run: echo ::set-output name=cypress-error::$(grep "Could not find Cypress test run results" test.log | wc -l | xargs)
         id: error-counter
         shell: bash 
       - run: exit 1
