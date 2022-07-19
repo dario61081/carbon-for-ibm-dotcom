@@ -23,7 +23,7 @@ jobs:
         node-version: [ 14.x ]
         browser: [ chromium ]
     outputs:
-      output1: ${{ steps.step1.outputs.test }}
+      output1: ${{ steps.final-check1.outputs.test-status }}
     steps:
         
       - name: 'Run e2e tests (chromium)'
@@ -52,9 +52,10 @@ jobs:
           echo See results at ${{ steps.cypress-tests-react.outputs.dashboardUrl }}  
 
       - name: Bypass failure if test didn't run
+        id: final-check1
         if: ${{ always() && (steps.cypress-tests-react.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl == '') }}
         run: |
-          echo "::set-output name=test::failed"
+          echo "::set-output name=test-status::failed"
           exit 1
 
       - name: Fail job if a test failed
