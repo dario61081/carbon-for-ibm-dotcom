@@ -57,6 +57,23 @@ jobs:
           echo See results at ${{ steps.cypress-tests-react.outputs.dashboardUrl }}
           echo everything here ${{ steps.cypress-tests-react.outputs }}
 
+      - name: check 1
+        if: ${{ always() }}
+        run: echo 'hi'
+
+      - name: check 2
+        if: ${{ (steps.cypress-tests-react.outcome == 'failure') }}
+        run: echo 'failure'
+
+      - name: check 3
+        if: steps.cypress-tests-react.outputs.dashboardUrl == ''
+        run: echo 'memes'
+
+      - name: ceck 4
+        if: steps.cypress-tests-react.outputs.dashboardUrl == 0
+        run: echo 'wow'
+
+
       - name: Bypass failure if test didn't run
         if: ${{ (steps.cypress-tests-react.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl != '') }}
         run: exit 0
