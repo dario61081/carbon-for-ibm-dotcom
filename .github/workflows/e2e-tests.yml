@@ -113,10 +113,10 @@ jobs:
           CYPRESS_API_URL: "https://sorry-cypress-director.qfl95m0zv01.us-east.codeengine.appdomain.cloud"
           CYPRESS_CACHE_FOLDER: /home/runner/.cache/Cypress
       - name: Bypass failure if test didn't run
-          if: ${{ steps.cypress-tests-react.outputs.outcome == 'failure' && steps.cypress-tests-react.outputs.dashboardUrl == '' }}
+          if: ${{ (steps.cypress-tests-react.outputs.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl == '') }}
           run: exit 0
       - name: Fail job if a test failed
-          if: ${{ steps.cypress-tests-react.outputs.outcome == 'failure' && steps.cypress-tests-react.outputs.dashboardUrl != '' }}
+          if: ${{ (steps.cypress-tests-react.outputs.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl != '') }}
           run: exit 1     
 
   react-tests-completed:
