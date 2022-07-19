@@ -122,11 +122,11 @@ jobs:
 
 
       - name: Bypass failure if test didn't run
-        if: ${{ (steps.cypress-tests-react.outputs.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl == '') }}
+        if: ${{ always() && (steps.cypress-tests-react.outputs.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl == '') }}
         run: exit 0
 
       - name: Fail job if a test failed
-        if: ${{ (steps.cypress-tests-react.outputs.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl != '') }}
+        if: ${{ always() && (steps.cypress-tests-react.outputs.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl != '') }}
         run: exit 1     
 
   react-tests-completed:
