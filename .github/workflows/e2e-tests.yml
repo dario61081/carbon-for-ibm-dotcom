@@ -51,12 +51,24 @@ jobs:
           echo Cypress finished with: ${{ steps.cypress-tests-react.outcome }}
           echo See results at ${{ steps.cypress-tests-react.outputs.dashboardUrl }}  
 
+
+
       - name: Bypass failure if test didn't run
-        id: final-check1
-        if: ${{ always() && (steps.cypress-tests-react.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl == '') }}
-        run: |
-          echo "::set-output name=test-status::failed"
-          exit 1
+        if: ${{ always() && (steps.cypress-tests-react.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl != '') }}
+        run: touch failure.txt
+
+      - name: Save folder
+        if: ${{ always() && (steps.cypress-tests-react.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl != '') }}
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-failed
+          path: failure.txt
+
+      - name: Exit
+        if: ${{ always() && (steps.cypress-tests-react.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl != '') }}
+        run: exit 1      
+      
+
 
       - name: Fail job if a test failed
         if: ${{ always() && (steps.cypress-tests-react.outcome == 'failure') && (steps.cypress-tests-react.outputs.dashboardUrl != '') }}
@@ -68,8 +80,18 @@ jobs:
     name: Build (matrix)
     needs: react-tests
     steps:
-      - name: sadasds
-        run: echo ${{ needs.react-tests.outputs.output1 }}
-      - name: Check React test matrix status
-        if: "${{ needs.react-tests.outputs.output1 == 'failed' }}"
+      - uses: actions/download-artifact@v3
+        with:
+          name: test-failed
+
+
+      - name: Check file existence
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "failure.txt"
+
+      - name: File exists
+        if: steps.check_files.outputs.files_exists == 'true'
+        # Only runs if all of the files exists
         run: exit 1
