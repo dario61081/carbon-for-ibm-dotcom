@@ -97,6 +97,7 @@ jobs:
         
       - name: 'Run e2e tests (chromium)'
         if: matrix.browser == 'chromium'
+        continue-on-error: true
         id: cypress-tests-react
         uses: cypress-io/github-action@v4
         with:
@@ -114,6 +115,7 @@ jobs:
           CYPRESS_CACHE_FOLDER: /home/runner/.cache/Cypress
 
       - name: Print Dashboard URL
+        if: ${{ always() }}
         run: |
           echo Cypress finished with: ${{ steps.cypress-tests-react.outcome }}
           echo See results at ${{ steps.cypress-tests-react.outputs.dashboardUrl }}  
